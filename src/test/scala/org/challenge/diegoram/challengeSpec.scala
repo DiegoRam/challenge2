@@ -7,7 +7,7 @@ class ChallengeSpec extends Specification {
 
   override def is: SpecStructure = s2"""
     find all rating for a Movie By Title $finAllRatingForAMovie
-    find average rating for a movie by title $failure
+    find average rating for a movie by title $findAverageForMovie
     find user favourite gender my name $failure
     find recomendations for user XXX $failure
 
@@ -21,6 +21,10 @@ class ChallengeSpec extends Specification {
       case None => Seq()
     }).size must beGreaterThan(0)
 
+  }
+
+  def findAverageForMovie = {
+    MovieDao.averageRating("Toy Story (1995)") must beEqualTo(Some(3.0))
   }
 
 }
