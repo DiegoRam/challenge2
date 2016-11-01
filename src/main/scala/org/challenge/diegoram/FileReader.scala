@@ -37,15 +37,14 @@ object Parser {
   implicit object MovieParser extends Parser[Movie] {
     override def createSingleObject(arr: Seq[String]): Option[Movie] =
       Try {
-        arrayToGenreBias(arr.drop(5)).flatMap { bias =>
-          Some(Movie(arr(0).toInt, arr(1), arr(2), arr(3), arr(4), bias))
-        }
+          Some(Movie(arr(0).toInt, arr(1), arr(2), arr(3), arr(4), arr.drop(5).mkString))
       } match {
         case Success(v) => v
         case Failure(ex) => None
       }
 
 
+    //TODO change it to have a parseable string in order to extract gender array from it
     private def arrayToGenreBias(arr: Seq[String]): Option[Long] = {
       def loop(xs: Seq[String], exp: Int, acc: Long): Long = {
         if(xs.isEmpty) acc

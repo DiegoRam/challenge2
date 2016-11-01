@@ -27,4 +27,14 @@ class ChallengeSpec extends Specification {
     MovieDao.averageRating("Toy Story (1995)") must beEqualTo(Some(3.0))
   }
 
+  def findFavouriteGenderForUser = {
+    UserDao.findOne(_.id == 1) match {
+      case Some(user) => {
+        RatingDao.findAll(_.userId == user.id).sortBy(_.rating).reverse.take(10).map { rat =>
+          MovieDao.findById(rat.movieId).map( mov => MovieDao.getGenreArray(mov.genres))
+        }
+      }
+    }
+  }
+
 }
