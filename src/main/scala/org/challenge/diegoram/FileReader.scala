@@ -33,7 +33,35 @@ object Parser {
       }
   }
 
+  implicit object MovieParser extends Parser[Movie] {
+    override def createSingleObject(arr: Seq[String]): Option[Movie] =
+      Try {
+        arrayToGenreBias(arr.drop(5)).flatMap { bias =>
+          Some(Movie(arr(0).toInt, arr(1), arr(2), arr(3), arr(4), bias))
+        }
+      } match {
+        case Success(v) => v
+        case Failure(ex) => None
+      }
 
+
+    private def arrayToGenreBias(arr: Seq[String]): Option[Long] = {
+      def loop(xs: Seq[String], exp: Int, acc: Long): Long = {
+        if(xs.isEmpty) acc
+        else {
+          loop(
+            xs.tail,
+            exp - 1,
+            acc + Math.pow(if(xs.head == "1") 10.00 else 0.00, if(exp>0) exp.toDouble else 1).toLong)
+        }
+      }
+
+      if (arr.size != 19) None
+      else {
+        Some(loop(arr, 18, 0))
+      }
+    }
+  }
 }
 
 abstract class FileReader[T](separation: Char, fileName: String) {
