@@ -24,9 +24,10 @@ object Parser {
   }
 
   implicit object RatingParser extends Parser[Rating] {
+    private val r = new java.util.Random
     override def createSingleObject(arr: Seq[String]): Option[Rating] =
       Try {
-        Rating(arr(0).toInt, arr(1).toInt, arr(2).toInt, arr(3).toInt)
+        Rating(r.nextInt,arr(0).toInt, arr(1).toInt, arr(2).toInt, arr(3).toInt)
       } match {
         case Success(rating) => Some(rating)
         case Failure(ex) => None
