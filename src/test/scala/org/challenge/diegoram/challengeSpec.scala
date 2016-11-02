@@ -9,7 +9,7 @@ class ChallengeSpec extends Specification {
     find all rating for a Movie By Title        $finAllRatingForAMovie
     find average rating for a movie by title    $findAverageForMovie
     find user favourite gender by name          $findFavouriteGenderForUser
-    find recomendations for user XXX            $failure
+    find recomendations for user XXX            $findRecomendationsForUser
 
     """
 
@@ -40,4 +40,22 @@ class ChallengeSpec extends Specification {
       }
       case None => None
     }) mustEqual Some(Genre(8,"Drama"))
+
+  def findRecomendationsForUser = {
+    val myTopRatedMovies =
+      for{
+        rating <- RatingDao.findAll(rat => rat.userId == 100 && rat.rating >= 4).take(10)
+        movie <- MovieDao.findById(rating.movieId)
+      } yield movie.id
+
+    val otherUsers =
+      for {
+        otherRat <- RatingDao.findAll(ot => ot.rating >=4 && myTopRatedMovies.contains(ot.movieId))
+        newMov <- MovieDao.findById(otherRat.movieId)
+      } yield newMov
+
+    val recommended = otherUsers.filterNot(m => myTopRatedMovies.contains(m))
+    recommended.size must beGreaterThan(0)
+
+  }
 }
