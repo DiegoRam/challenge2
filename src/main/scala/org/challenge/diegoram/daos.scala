@@ -1,8 +1,6 @@
 package org.challenge.diegoram
 
 import Repositories._
-import cats.instances.all._
-import cats.syntax.eq._
 
 abstract class BaseDao[T <: Table](table: Seq[T]) {
   def findById(id: Int): Option[T] = table.filter(_.id == id).headOption
@@ -19,17 +17,6 @@ case object MovieDao extends BaseDao[Movie](movieTable) {
         Some(list.foldLeft(0)((a,b) => a + b.rating) / list.size)
       }
     }
-  }
-
-  def getGenreArray(str: String): Seq[Genre] = {
-    def loop(xs: Seq[Char], count: Int, acc: Seq[Genre]): Seq[Genre] ={
-      if(xs.isEmpty) acc
-      else {
-        if(xs.head === '1') loop(xs.tail, count + 1, acc :+ genreTable(count))
-        else loop(xs.tail, count + 1, acc)
-      }
-    }
-    loop(str.toCharArray, 0 , Seq())
   }
 }
 

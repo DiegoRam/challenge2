@@ -13,8 +13,8 @@ case class Movie(
   releaseDate: String,
   videoReleaseDate: String,
   imdbUrl: String,
-  genres: String
+  genres: Seq[Genre]
 ) extends Table
-//1111111111111111111
+
 //unknown | Action | Adventure | Animation |Children's | Comedy | Crime | Documentary | Drama | Fantasy |
 //Film-Noir | Horror | Musical | Mystery | Romance | Sci-Fi |Thriller | War | Western |

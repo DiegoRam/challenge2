@@ -37,11 +37,22 @@ object Parser {
   implicit object MovieParser extends Parser[Movie] {
     override def createSingleObject(arr: Seq[String]): Option[Movie] =
       Try {
-          Some(Movie(arr(0).toInt, arr(1), arr(2), arr(3), arr(4), arr.drop(5).mkString))
+          Some(Movie(arr(0).toInt, arr(1), arr(2), arr(3), arr(4), getGenreArray(arr.drop(5).mkString)))
       } match {
         case Success(v) => v
         case Failure(ex) => None
       }
+
+    def getGenreArray(str: String): Seq[Genre] = {
+      def loop(xs: Seq[Char], count: Int, acc: Seq[Genre]): Seq[Genre] ={
+        if(xs.isEmpty) acc
+        else {
+          if(xs.head == '1') loop(xs.tail, count + 1, acc :+ GenreDao.findById(count).get)
+          else loop(xs.tail, count + 1, acc)
+        }
+      }
+      loop(str.toCharArray, 0 , Seq())
+    }
 
 
     //TODO change it to have a parseable string in order to extract gender array from it

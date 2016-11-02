@@ -41,9 +41,8 @@ class CsvTest extends Specification {
 
     val list = reader.createObjectList
     list must haveSize(1682)
-    list(0).genres must beEqualTo("0001110000000000000")
-    list(1).genres must beEqualTo("0110000000000000100")
-
+    list.head.genres must beEqualTo(Seq(Genre(1,"Action"), Genre(2,"Adventure"), Genre(16,"Thriller")))
+    list(1).genres must beEqualTo(Seq(Genre(1,"Action"), Genre(2,"Adventure"), Genre(16,"Thriller")))
   }
 
 }
